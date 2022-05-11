@@ -1,12 +1,10 @@
 import { countries } from '$utils/country';
 
-var data;
-
 async function init(currentUserLocation: string) {
-  data = await countries();
+  const data = await countries();
 
-  let dropdownList = $('#prefix-dropdown-list');
-  let dropdownItem = dropdownList.children('.prefix-dropdown_item');
+  const dropdownList = $('#prefix-dropdown-list');
+  const dropdownItem = dropdownList.children('.prefix-dropdown_item');
   dropdownList.children().remove();
 
   data.map((country: any, index: number) => {
@@ -66,7 +64,43 @@ function selectItem(e: any) {
   $('#prefix-dropdown-toggle').trigger('w-close.w-dropdown');
 }
 
+/**
+ * keycode reference https://github.com/ku-fpg/blackboard/wiki/jQuery-Keycode-Cheatsheet
+ * @param e event of keydown
+ *  */
+function navigate(e: any) {
+  switch (e.which) {
+    case 38: //up
+      let up = e.currentTarget.tabIndex;
+      $(`.prefix-dropdown_item[tabindex="${--up}"]`).trigger('focus');
+      break;
+    case 40: //down
+      let down = e.currentTarget.tabIndex;
+      $(`.prefix-dropdown_item[tabindex="${++down}"]`).trigger('focus');
+      break;
+    case 13: //enter
+      selectItem(e);
+      break;
+    case 9: //tab
+      $('#prefix-dropdown-toggle').trigger('w-close.w-dropdown');
+      break;
+    case 32: //space
+      selectItem(e);
+      break;
+    default:
+      $('.prefix-dropdown_item')
+        .filter((_, el) => {
+          let cca2 = el.getAttribute('data-cca2') ?? '';
+          return cca2.toLowerCase().startsWith(String.fromCharCode(e.which).toLowerCase());
+        })
+        .first()
+        .trigger('focus');
+      break;
+  }
+}
+
 export const toggle = {
   init,
   selectItem,
+  navigate,
 };
