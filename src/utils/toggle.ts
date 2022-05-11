@@ -52,6 +52,21 @@ function setCurrentItem(item: JQuery<HTMLElement>, country: any): JQuery<HTMLEle
   return item;
 }
 
+function selectItem(e: any) {
+  //remove current state from old item
+  $('#prefix-dropdown-list .w--current').removeClass('w--current');
+
+  setCurrentItem($(e.currentTarget), {
+    prefix: $(e.currentTarget).attr('data-prefix') ?? '',
+    cca2: $(e.currentTarget).attr('data-cca2') ?? '',
+    flag: $(e.currentTarget).children('img').attr('src') ?? '',
+  });
+
+  //close dropdown
+  $('#prefix-dropdown-toggle').trigger('w-close.w-dropdown');
+}
+
 export const toggle = {
   init,
+  selectItem,
 };
