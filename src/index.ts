@@ -1,7 +1,11 @@
-import { helloStarter } from '$utils/log';
+import { currentUserLocation } from '$utils/location';
+import { toggle } from '$utils/toggle';
 
-// Starter example. Check the comments!
-document.addEventListener('DOMContentLoaded', () => {
-  const name = 'John Doe';
-  helloStarter(name);
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const userCurrentLocation = await currentUserLocation();
+  toggle.init(userCurrentLocation);
+
+  $('#prefix-dropdown-list').on('click', '.prefix-dropdown_item', toggle.selectItem);
+  $('#prefix-dropdown-list').on('keydown', '.prefix-dropdown_item', toggle.navigate);
 });
